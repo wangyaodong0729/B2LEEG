@@ -28,7 +28,7 @@ pip install scikit-learn
 import numpy as np
 import pandas as pd
 import scipy.io as scio
-from BroadLearningSystem import BLS, BLS_AddEnhanceNodes, BLS_AddFeatureEnhanceNodes
+from key import BLS, BLS_AddEnhanceNodes, BLS_AddFeatureEnhanceNodes
 from sklearn.model_selection import train_test_split
 ''' For Keras dataset_load()'''
 # import keras
@@ -78,73 +78,7 @@ import numpy as np
 # trainlabel1_series = df.iloc[1:, -1]
 # trainlabel1 = pd.get_dummies(trainlabel1_series).to_numpy()
 # traindata,testdata ,trainlabel, testlabel=train_test_split(traindata1, trainlabel1, train_size=0.8, test_size=0.2)
-# asd数据效果好的
 
-def load_images(data_dir, label, target_size=(28, 28)):
-    image_list = []
-    label_list = []
-
-    print(f"Loading images from directory: {data_dir}")
-
-    for filename in os.listdir(data_dir):
-        ext = os.path.splitext(filename)[1].lower()
-        if ext in ['.jpg', '.png', '.jpeg']:
-            file_path = os.path.join(data_dir, filename)
-            # print(f"Processing file: {file_path}")
-            try:
-                with Image.open(file_path) as img:
-                    img = img.convert('L')
-                    img = img.resize(target_size)
-                    img_array = np.array(img) / 255.0
-                    image_list.append(img_array)
-                    label_list.append(label)
-            except Exception as e:
-                print(f"Error processing file {file_path}: {e}")
-
-    print(f"Loaded {len(image_list)} images.")
-    return np.array(image_list), np.array(label_list)
-
-
-# 设置数据目录
-base_dir = '/home/wyd/中医舌诊染苔数据'
-
-# 非染苔图片和标签
-non_dyed_dir = os.path.join(base_dir, '非染苔')
-non_dyed_images, non_dyed_labels = load_images(non_dyed_dir, 0)  # 标签为0
-
-# 染苔图片和标签
-dyed_dir = os.path.join(base_dir, '染苔')
-dyed_images, dyed_labels = load_images(dyed_dir, 1)  # 标签为1
-
-# 合并数据集
-traindata = np.concatenate((non_dyed_images, dyed_images), axis=0)
-traindata = traindata.reshape(traindata.shape[0], 28*28).astype('float64')
-
-trainlabel = np.concatenate((non_dyed_labels, dyed_labels))
-trainlabel = trainlabel.reshape(-1, 1)
-#
-# dataFile = '/home/wyd/spikebls/train.mat'
-# data = scio.loadmat(dataFile)
-# traindata1 = np.double(data['features'])
-# trainlabel1 = np.double(data['classes'])
-# # # /home/wyd/spikebls/ASDtest.mat'
-# # dataFile = '/home/wyd/spikebls/test.mat'
-# # data = scio.loadmat(dataFile)
-# # testdata = np.double(data['features'])
-# # testlabel = np.double(data['classes'])
-#
-traindata,testdata ,trainlabel, testlabel=train_test_split(traindata, trainlabel, train_size=0.8, test_size=0.2,random_state=12)
-#数据效果不好的ASD
-# dataFile = '/home/wyd/spikebls/PSDfeatures.mat'
-# data = scio.loadmat(dataFile)
-# traindata1 = np.double(data['features'])
-# trainlabel1 = np.double(data['classes'])
-# traindata,testdata ,trainlabel, testlabel=train_test_split(traindata1, trainlabel1, train_size=0.8, test_size=0.2)
-# (traindata,trainlabel), (testdata, testlabel) = fashion_mnist.load_data()
-# traindata = traindata.reshape(traindata.shape[0], 28*28).astype('float64')/255
-# trainlabel =to_categorical(trainlabel, 10)
-# testdata = testdata.reshape(testdata.shape[0], 28*28).astype('float64')/255
-# testlabel =to_categorical(testlabel, 10)
 N1 = 10  #  # of nodes belong to each window
 N2 =10  #  # of windows -------Feature mapping layer
 N3 = 7000 #  # of enhancement nodes -----Enhance layer
